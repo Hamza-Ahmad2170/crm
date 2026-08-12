@@ -1,4 +1,14 @@
-import { and, eq, isNull, sql } from "drizzle-orm";
+import {
+  and,
+  eq,
+  isNull,
+  sql,
+  or,
+  ilike,
+  inArray,
+  asc,
+  desc,
+} from "drizzle-orm";
 
 import { db } from "@/db/index.js";
 import { customers } from "@/db/schema/customers.js";
@@ -13,19 +23,43 @@ export async function createCustomer(data: typeof customers.$inferInsert) {
 export async function listCustomers({
   limit,
   offset,
+  search,
+  status,
+  sortBy,
+  sortDirection,
 }: CustomerListSchema) {
+  const conditions = [isNull(customers.deletedAt)];
+
+  if (search) {
+    conditions.push(
+      or(
+        ilike(customers.name, `%${search}%`),
+        ilike(customers.phone, `%${search}%`),
+      )!,
+    );
+  }
+
+  if (status?.length) {
+    conditions.push(inArray(customers.status, status));
+  }
+
+  const where = and(...conditions);
+
   const [rows, [{ count }]] = await Promise.all([
     db
       .select()
       .from(customers)
-      .where(isNull(customers.deletedAt))
-      .orderBy(customers.id)
+      .where(where)
+      .orderBy(getCustomerOrderBy(sortBy, sortDirection))
       .limit(limit)
       .offset(offset),
+
     db
-      .select({ count: sql<number>`count(*)::int` })
+      .select({
+        count: sql<number>`count(*)::int`,
+      })
       .from(customers)
-      .where(isNull(customers.deletedAt)),
+      .where(where),
   ]);
 
   return {
@@ -63,4 +97,18 @@ export async function deleteCustomer(id: string) {
     .returning();
 
   return customer;
+}
+
+function getCustomerOrderBy(
+  sortBy: CustomerListSchema["sortBy"],
+  sortDirection: CustomerListSchema["sortDirection"],
+) {
+  const column = {
+    name: customers.name,
+    createdAt: customers.createdAt,
+    status: customers.status,
+    phone: customers.phone,
+  }[sortBy];
+
+  return sortDirection === "asc" ? asc(column) : desc(column);
 }

@@ -1,40 +1,31 @@
-import type { DataTableConfig } from '@/config/data-table'
-import type { FilterItemSchema } from '@/lib/parsers'
-import type { ColumnSort, Row, RowData } from '@tanstack/react-table'
+import type { LucideIcon } from '@/components/icons'
+import '@tanstack/react-table'
+
+/**
+ * Column metadata consumed by the data-table toolbar to auto-render a filter
+ * input per column. Filters are not wired yet (search/sort are stubbed) — this
+ * type is here so the toolbar can be dropped in later without changes.
+ */
+export type DataTableColumnMeta = {
+  variant?:
+    | 'text'
+    | 'number'
+    | 'range'
+    | 'date'
+    | 'dateRange'
+    | 'select'
+    | 'multiSelect'
+  label?: string
+  placeholder?: string
+  options?: { label: string; value: string; icon?: LucideIcon }[]
+}
 
 declare module '@tanstack/react-table' {
-  // biome-ignore lint/correctness/noUnusedVariables: Interface type parameters required by @tanstack/react-table
-  interface ColumnMeta<TData extends RowData, TValue> {
-    label?: string
-    placeholder?: string
-    variant?: FilterVariant
-    options?: Option[]
-    range?: [number, number]
-    unit?: string
-    icon?: React.FC<React.SVGProps<SVGSVGElement>>
+  interface ColumnMeta<TData, TValue> {
+    /**
+     * Opt a column into the data-table toolbar by setting `meta`. Reserved for
+     * when server-side filtering is enabled.
+     */
+    table?: DataTableColumnMeta
   }
-}
-
-export interface Option {
-  label: string
-  value: string
-  count?: number
-  icon?: React.FC<React.SVGProps<SVGSVGElement>>
-}
-
-export type FilterOperator = DataTableConfig['operators'][number]
-export type FilterVariant = DataTableConfig['filterVariants'][number]
-export type JoinOperator = DataTableConfig['joinOperators'][number]
-
-export interface ExtendedColumnSort<TData> extends Omit<ColumnSort, 'id'> {
-  id: Extract<keyof TData, string>
-}
-
-export interface ExtendedColumnFilter<TData> extends FilterItemSchema {
-  id: Extract<keyof TData, string>
-}
-
-export interface DataTableRowAction<TData> {
-  row: Row<TData>
-  variant: 'update' | 'delete'
 }

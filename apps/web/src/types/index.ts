@@ -1,4 +1,4 @@
-import type { LucideIcon } from 'lucide-react'
+import type { IconName } from '@/components/icons'
 
 export interface PermissionCheck {
   permission?: string
@@ -14,7 +14,7 @@ export interface NavItem {
   disabled?: boolean
   external?: boolean
   shortcut?: [string, string]
-  Icon?: LucideIcon
+  icon?: IconName
   label?: string
   description?: string
   isActive?: boolean

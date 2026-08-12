@@ -11,7 +11,7 @@ export const customers = pgTable("customers", {
 
   name: varchar("name", { length: 255 }).notNull(),
   phone: varchar("phone", { length: 20 }).notNull().unique(),
-  cnic: varchar("cnic", { length: 20 }).unique(), // national ID, optional at signup
+
   address: varchar("address", { length: 500 }),
 
   status: customerStatusEnum("status").notNull().default("active"),

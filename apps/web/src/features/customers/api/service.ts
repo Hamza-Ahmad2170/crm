@@ -1,9 +1,23 @@
 import { parseResponse } from 'hono/client'
 import { apiClient } from '@/lib/api-client'
-import type { CreateCustomerInput, UpdateCustomerInput } from '@repo/schema'
+import type {
+  CreateCustomerInput,
+  CustomerListSchema,
+  UpdateCustomerInput,
+} from '@repo/schema'
 
-export function getCustomers() {
-  return parseResponse(apiClient.api.v1.customers.$get())
+export function getCustomers(filters: CustomerListSchema) {
+  // limit/offset are numbers after validation, but the Hono client types
+  // `z.coerce.number()` query params as strings (they travel as query strings).
+  return parseResponse(
+    apiClient.api.v1.customers.$get({
+      query: {
+        ...filters,
+        limit: String(filters.limit),
+        offset: String(filters.offset),
+      },
+    }),
+  )
 }
 
 export function getCustomer(id: string) {

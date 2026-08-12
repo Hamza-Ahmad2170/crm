@@ -13,7 +13,7 @@ import {
   InputGroup,
   InputGroupAddon,
 } from "#/components/ui/input-group.tsx"
-import { SearchIcon, CheckIcon } from "lucide-react"
+import { SearchIcon, CheckIcon } from "#/components/icons.tsx"
 
 function Command({
   className,
@@ -58,7 +58,7 @@ function CommandDialog({
         )}
         showCloseButton={showCloseButton}
       >
-        {children}
+        <Command>{children}</Command>
       </DialogContent>
     </Dialog>
   )

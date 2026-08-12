@@ -12,11 +12,13 @@ export const createCustomerSchema = z.object({
 });
 
 export const updateCustomerSchema = createCustomerSchema.partial();
-export const customerListSchema = z
-  .object({
-    ...paginationSchema,
-  })
-  .optional();
+export const customerListSchema = z.object({
+  ...paginationSchema,
+  status: z.array(customerStatusSchema).optional(),
+  sortBy: z.enum(["name", "createdAt", "status", "phone"]).default("createdAt"),
+  sortDirection: z.enum(["asc", "desc"]).default("desc"),
+});
+
 export type CustomerListSchema = z.infer<typeof customerListSchema>;
 export type CreateCustomerInput = z.infer<typeof createCustomerSchema>;
 export type UpdateCustomerInput = z.infer<typeof updateCustomerSchema>;
