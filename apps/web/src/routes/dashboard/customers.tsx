@@ -9,15 +9,10 @@ export const Route = createFileRoute('/dashboard/customers')({
     breadcrumb: 'Customers',
   },
   validateSearch: customerListSchema,
-  loader: async ({ context }) =>
-    context.queryClient.ensureQueryData(
-      customersQueryOptions({
-        limit: 20,
-        offset: 0,
-        sortBy: 'createdAt',
-        sortDirection: 'desc',
-      }),
-    ),
+  loaderDeps: ({ search }) => ({ search }),
+  loader: ({ context, deps: { search } }) => {
+    context.queryClient.ensureQueryData(customersQueryOptions(search))
+  },
   component: RouteComponent,
 })
 

@@ -59,7 +59,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         </ThemeProvider>
         <TanStackDevtools
           config={{
-            position: 'bottom-right',
+            position: 'top-left',
           }}
           plugins={[
             {

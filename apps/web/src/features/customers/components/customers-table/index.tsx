@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { useSearch } from '@tanstack/react-router'
-
-import { DataTable } from '@/components/ui/data-table'
+import { cn } from '#/lib/utils.ts'
+import { DataTable } from '#/components/data-table/data-table'
 import { useDataTable } from '@/hooks/use-data-table'
 import { customersQueryOptions } from '@/features/customers/api'
 import { columns } from './columns'
@@ -11,15 +11,23 @@ export function CustomersTable() {
     from: '/dashboard/customers',
   })
 
-  const { data } = useSuspenseQuery(customersQueryOptions({ ...routeSearch }))
+  const { data } = useSuspenseQuery(customersQueryOptions(routeSearch))
 
-  const { table } = useDataTable({
+  const { table, isPending } = useDataTable({
     data: data.items,
     columns,
     pageCount: data.meta.totalPages,
   })
 
-  return <DataTable table={table} />
+  return (
+    <div
+      className={cn('flex flex-1', {
+        'opacity-60 transition-opacity': isPending,
+      })}
+    >
+      <DataTable table={table} />
+    </div>
+  )
 }
 
 export function CustomersTableSkeleton() {

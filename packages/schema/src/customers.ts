@@ -1,7 +1,12 @@
 import { z } from "zod";
 import { paginationSchema } from "./common/index.js";
 
-export const customerSortBySchema = z.enum(["name", "createdAt", "updatedAt"]);
+export const customerSortBySchema = z.enum([
+  "name",
+  "createdAt",
+  "status",
+  "phone",
+]);
 export const customerStatusSchema = z.enum(["active", "suspended", "inactive"]);
 
 export const createCustomerSchema = z.object({
@@ -12,10 +17,11 @@ export const createCustomerSchema = z.object({
 });
 
 export const updateCustomerSchema = createCustomerSchema.partial();
+
 export const customerListSchema = z.object({
   ...paginationSchema,
   status: z.array(customerStatusSchema).optional(),
-  sortBy: z.enum(["name", "createdAt", "status", "phone"]).default("createdAt"),
+  sortBy: customerSortBySchema.default("createdAt"),
   sortDirection: z.enum(["asc", "desc"]).default("desc"),
 });
 

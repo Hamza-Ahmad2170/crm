@@ -1,4 +1,4 @@
-import { keepPreviousData, queryOptions } from '@tanstack/react-query'
+import { queryOptions } from '@tanstack/react-query'
 import type { CustomerListSchema } from '@repo/schema'
 import { getCustomer, getCustomers } from './service'
 

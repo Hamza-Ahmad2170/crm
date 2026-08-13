@@ -22,7 +22,7 @@ function DashboardLayout() {
           Skip to content
         </a>
         <AppSidebar />
-        <SidebarInset id="main-content" tabIndex={-1} className="h-svh overflow-hidden">
+        <SidebarInset id="main-content" tabIndex={-1}>
           <Header />
           <Outlet />
         </SidebarInset>

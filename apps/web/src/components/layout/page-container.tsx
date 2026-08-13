@@ -51,9 +51,9 @@ export default function PageContainer({
   const hasHeader = title || action
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col p-4 md:px-6">
+    <div className="flex flex-1 flex-col p-4 md:px-6">
       {hasHeader && (
-        <div className="mb-4 flex shrink-0 items-start justify-between gap-4">
+        <div className="mb-4 flex items-start justify-between gap-4">
           <div className="space-y-1">
             {title ? (
               <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
@@ -65,9 +65,7 @@ export default function PageContainer({
           {action ? <div className="shrink-0">{action}</div> : null}
         </div>
       )}
-      <div className="flex min-h-0 flex-1 flex-col">
-        {isLoading ? <PageSkeleton /> : children}
-      </div>
+      {isLoading ? <PageSkeleton /> : children}
     </div>
   )
 }
