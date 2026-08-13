@@ -34,41 +34,41 @@ export const columns: ColumnDef<Customer>[] = [
     ),
     cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
   },
-  {
-    accessorKey: 'phone',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Phone" />
-    ),
-  },
-  {
-    accessorKey: 'status',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
-    cell: ({ row }) => {
-      const status = row.original.status
-      const variant =
-        status === 'active'
-          ? 'default'
-          : status === 'suspended'
-            ? 'destructive'
-            : 'secondary'
-      return (
-        <Badge variant={variant} className="capitalize">
-          {status}
-        </Badge>
-      )
-    },
-  },
-  {
-    accessorKey: 'createdAt',
-    header: 'Created',
-    cell: ({ row }) => (
-      <span className="text-muted-foreground">
-        {new Date(row.original.createdAt).toLocaleDateString()}
-      </span>
-    ),
-  },
+  //   {
+  //     accessorKey: 'phone',
+  //     header: ({ column }) => (
+  //       <DataTableColumnHeader column={column} title="Phone" />
+  //     ),
+  //   },
+  //   {
+  //     accessorKey: 'status',
+  //     header: ({ column }) => (
+  //       <DataTableColumnHeader column={column} title="Status" />
+  //     ),
+  //     cell: ({ row }) => {
+  //       const status = row.original.status
+  //       const variant =
+  //         status === 'active'
+  //           ? 'default'
+  //           : status === 'suspended'
+  //             ? 'destructive'
+  //             : 'secondary'
+  //       return (
+  //         <Badge variant={variant} className="capitalize">
+  //           {status}
+  //         </Badge>
+  //       )
+  //     },
+  //   },
+  //   {
+  //     accessorKey: 'createdAt',
+  //     header: 'Created',
+  //     cell: ({ row }) => (
+  //       <span className="text-muted-foreground">
+  //         {new Date(row.original.createdAt).toLocaleDateString()}
+  //       </span>
+  //     ),
+  //   },
   //   {
   //     id: 'actions',
   //     header: 'Actions',
@@ -77,5 +77,3 @@ export const columns: ColumnDef<Customer>[] = [
   //     enableHiding: false,
   //   },
 ]
-
-// export const columns: ColumnDef<Customer>[] = []
