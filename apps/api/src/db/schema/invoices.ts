@@ -8,13 +8,9 @@ import {
   pgEnum,
   index,
 } from "drizzle-orm/pg-core";
+import { INVOICE_STATUS } from "@repo/validators/enums";
 
-export const invoiceStatusEnum = pgEnum("invoice_status", [
-  "unpaid",
-  "paid",
-  "overdue",
-  "cancelled",
-]);
+export const invoiceStatusEnum = pgEnum("invoice_status", INVOICE_STATUS);
 
 export const invoices = pgTable(
   "invoices",

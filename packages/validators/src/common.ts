@@ -1,13 +1,8 @@
 import { z } from "zod";
 
 export const paginationQuerySchema = z.object({
-  page: z.coerce.number().int().min(1).default(1),
-  pageSize: z.coerce.number().int().min(1).max(100).default(20),
-});
-
-export const sortQuerySchema = z.object({
-  sortBy: z.string().optional(),
-  order: z.enum(["asc", "desc"]).default("desc"),
+  limit: z.coerce.number().int().min(1).max(50).default(20),
+  offset: z.coerce.number().int().min(0).default(0),
 });
 
 export const searchQuerySchema = z.object({
@@ -22,5 +17,15 @@ export const bulkIdsSchema = z.object({
   ids: z.array(z.uuid()).min(1).max(100),
 });
 
+// packages/validators/src/common.ts
+export function createSortQuerySchema<T extends readonly [string, ...string[]]>(
+  allowedFields: T,
+  defaultField: T[number],
+) {
+  return z.object({
+    sortBy: z.enum(allowedFields).default(defaultField),
+    order: z.enum(["asc", "desc"]).default("desc"),
+  });
+}
+
 export type PaginationQuery = z.infer<typeof paginationQuerySchema>;
-export type SortQuery = z.infer<typeof sortQuerySchema>;

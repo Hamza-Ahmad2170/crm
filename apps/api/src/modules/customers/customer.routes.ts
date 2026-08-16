@@ -2,56 +2,59 @@ import { Hono } from "hono";
 import { zValidator } from "@/lib/http/validators.js";
 import { ApiResponse } from "@/lib/http/response.js";
 
+import * as customersService from "./customers.service.js";
+
 import {
-  bulkDeleteCustomerService,
-  createCustomerService,
-  deleteCustomerService,
-  findCustomerService,
-  listCustomersService,
-  updateCustomerService,
-} from "./customer.service.js";
-import {
-  idParamSchema,
+  getCustomersQuerySchema,
   createCustomerSchema,
-  bulkDeleteSchema,
+  getCustomerParamsSchema,
   updateCustomerSchema,
-  customerListSchema,
-} from "@repo/validators";
+  deleteCustomerParamsSchema,
+  bulkDeleteCustomersSchema,
+} from "@repo/validators/customers";
 
 export const customerRouter = new Hono()
-  .get("/", zValidator("query", customerListSchema), async (c) => {
-    const data = c.req.valid("query");
-    const { items, pagination } = await listCustomersService(data);
-    return ApiResponse.paginated(c, items, pagination);
+  .get("/", zValidator("query", getCustomersQuerySchema), async (c) => {
+    const query = c.req.valid("query");
+    const { items, meta } = await customersService.listCustomers(query);
+    return ApiResponse.paginated(c, items, meta);
+  })
+  .get("/:id", zValidator("param", getCustomerParamsSchema), async (c) => {
+    const { id } = c.req.valid("param");
+    const customer = await customersService.getCustomerById(id);
+    return ApiResponse.success(c, customer);
   })
   .post("/", zValidator("json", createCustomerSchema), async (c) => {
     const data = c.req.valid("json");
-    const customer = await createCustomerService(data);
+    const customer = await customersService.createCustomer(data);
     return ApiResponse.created(c, customer);
-  })
-  .post("/bulk-delete", zValidator("json", bulkDeleteSchema), async (c) => {
-    const { ids } = c.req.valid("json");
-    const customer = await bulkDeleteCustomerService(ids);
-    return ApiResponse.success(c, customer);
-  })
-  .get("/:id", zValidator("param", idParamSchema), async (c) => {
-    const { id } = c.req.valid("param");
-    const customer = await findCustomerService(id);
-    return ApiResponse.success(c, customer);
   })
   .patch(
     "/:id",
-    zValidator("param", idParamSchema),
+    zValidator("param", getCustomerParamsSchema),
     zValidator("json", updateCustomerSchema),
     async (c) => {
-      const id = c.req.param("id");
+      const { id } = c.req.valid("param");
       const data = c.req.valid("json");
-      const customer = await updateCustomerService(id, data);
+      const customer = await customersService.updateCustomer(id, data);
       return ApiResponse.success(c, customer);
     },
   )
-  .delete("/:id", zValidator("param", idParamSchema), async (c) => {
-    const { id } = c.req.valid("param");
-    const customer = await deleteCustomerService(id);
-    return ApiResponse.success(c, customer);
-  });
+  .delete(
+    "/:id",
+    zValidator("param", deleteCustomerParamsSchema),
+    async (c) => {
+      const { id } = c.req.valid("param");
+      await customersService.deleteCustomer(id);
+      return ApiResponse.noContent(c);
+    },
+  )
+  .post(
+    "/bulk-delete",
+    zValidator("json", bulkDeleteCustomersSchema),
+    async (c) => {
+      const { ids } = c.req.valid("json");
+      const result = await customersService.bulkDeleteCustomers(ids);
+      return ApiResponse.success(c, result);
+    },
+  );

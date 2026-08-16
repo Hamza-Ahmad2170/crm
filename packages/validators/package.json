@@ -5,8 +5,7 @@
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./enums": "./src/enums.ts"
+    "./*": "./src/*.ts"
   },
   "dependencies": {
     "zod": "^4.3.6"

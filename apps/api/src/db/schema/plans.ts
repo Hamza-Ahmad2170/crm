@@ -8,8 +8,9 @@ import {
   timestamp,
   pgEnum,
 } from "drizzle-orm/pg-core";
+import { PLAN_STATUS } from "@repo/validators/enums";
 
-export const planStatusEnum = pgEnum("plan_status", ["active", "archived"]);
+export const planStatusEnum = pgEnum("plan_status", PLAN_STATUS);
 export const billingCycleEnum = pgEnum("billing_cycle", ["monthly"]);
 
 export const plans = pgTable("plans", {

@@ -8,13 +8,9 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 import { customers } from "./customers.js";
+import { TICKET_STATUS } from "@repo/validators/enums";
 
-export const ticketStatusEnum = pgEnum("ticket_status", [
-  "open",
-  "in_progress",
-  "resolved",
-  "closed",
-]);
+export const ticketStatusEnum = pgEnum("ticket_status", TICKET_STATUS);
 export const ticketPriorityEnum = pgEnum("ticket_priority", [
   "low",
   "medium",

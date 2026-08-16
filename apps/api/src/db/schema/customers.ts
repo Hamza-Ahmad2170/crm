@@ -10,11 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { CUSTOMER_STATUS } from "@repo/validators/enums";
 
-export const customerStatusEnum = pgEnum("customer_status", [
-  "active",
-  "inactive",
-  "suspended",
-]);
+export const customerStatusEnum = pgEnum("customer_status", CUSTOMER_STATUS);
 
 export const customers = pgTable(
   "customers",
