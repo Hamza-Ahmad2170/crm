@@ -12,7 +12,7 @@ import {
 
 import { db } from "@/db/index.js";
 import { customers } from "@/db/schema/customers.js";
-import type { CustomerListSchema } from "@repo/schema";
+import type { CustomerListSchema } from "@repo/validators";
 
 export async function createCustomer(data: typeof customers.$inferInsert) {
   const [customer] = await db.insert(customers).values(data).returning();
@@ -95,6 +95,16 @@ export async function deleteCustomer(id: string) {
     .delete(customers)
     .where(and(eq(customers.id, id), isNull(customers.deletedAt)))
     .returning();
+
+  return customer;
+}
+
+export async function bulkDeleteCustomer(ids: string[]) {
+  const [customer] = await db
+    .update(customers)
+    .set({ deletedAt: new Date() })
+    .where(and(inArray(customers.id, ids), isNull(customers.deletedAt)))
+    .returning({ id: customers.id });
 
   return customer;
 }

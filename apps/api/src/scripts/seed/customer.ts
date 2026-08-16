@@ -25,10 +25,6 @@ const statusValues = ["active", "inactive", "suspended"] as const;
 type StatusType = (typeof statusValues)[number];
 
 // Pakistani CNIC generator
-export function generateCNIC(): string {
-  const digits = faker.string.numeric({ length: 13 });
-  return `${digits.slice(0, 5)}-${digits.slice(5, 12)}-${digits.slice(12)}`;
-}
 
 function generateCustomer(index: number): typeof customers.$inferInsert {
   const status = faker.helpers.arrayElement(statusValues) as StatusType;
@@ -36,7 +32,7 @@ function generateCustomer(index: number): typeof customers.$inferInsert {
   return {
     name: faker.person.fullName(),
     phone: generatePhone(),
-    cnic: faker.datatype.boolean(0.7) ? generateCNIC() : null, // 70% chance of having CNIC
+
     address: faker.location.streetAddress({ useFullAddress: true }),
     status: status,
     // createdAt, updatedAt will be handled by defaults
@@ -80,11 +76,6 @@ async function seedCustomers() {
       `  ${status}: ${count} (${((count / inserted.length) * 100).toFixed(1)}%)`,
     );
   });
-
-  const withCNIC = inserted.filter((c) => c.cnic).length;
-  console.log(
-    `\n📋 ${withCNIC} (${((withCNIC / inserted.length) * 100).toFixed(1)}%) have CNIC`,
-  );
 }
 
 export { seedCustomers };

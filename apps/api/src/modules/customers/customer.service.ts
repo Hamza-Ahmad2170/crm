@@ -4,11 +4,12 @@ import {
   findCustomerById,
   updateCustomer,
   deleteCustomer,
+  bulkDeleteCustomer,
 } from "./customer.repository.js";
-import type { CustomerListSchema } from "@repo/schema";
+import type { CustomerListSchema } from "@repo/validators";
 import { NotFoundError } from "@/lib/http/http-error.js";
 
-import type { CreateCustomerInput, UpdateCustomerInput } from "@repo/schema";
+import type { CreateCustomerInput, UpdateCustomerInput } from "@repo/validators";
 import { getPaginationMeta } from "@/lib/pagination.js";
 
 export async function createCustomerService(data: CreateCustomerInput) {
@@ -38,6 +39,16 @@ export async function updateCustomerService(
   data: UpdateCustomerInput,
 ) {
   const customer = await updateCustomer(id, data);
+
+  if (!customer) {
+    throw new NotFoundError("Customer not found", "CUSTOMER_NOT_FOUND");
+  }
+
+  return customer;
+}
+
+export async function bulkDeleteCustomerService(ids: string[]) {
+  const customer = await bulkDeleteCustomer(ids);
 
   if (!customer) {
     throw new NotFoundError("Customer not found", "CUSTOMER_NOT_FOUND");

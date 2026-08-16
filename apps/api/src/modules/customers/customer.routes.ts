@@ -3,6 +3,7 @@ import { zValidator } from "@/lib/http/validators.js";
 import { ApiResponse } from "@/lib/http/response.js";
 
 import {
+  bulkDeleteCustomerService,
   createCustomerService,
   deleteCustomerService,
   findCustomerService,
@@ -12,9 +13,10 @@ import {
 import {
   idParamSchema,
   createCustomerSchema,
+  bulkDeleteSchema,
   updateCustomerSchema,
   customerListSchema,
-} from "@repo/schema";
+} from "@repo/validators";
 
 export const customerRouter = new Hono()
   .get("/", zValidator("query", customerListSchema), async (c) => {
@@ -26,6 +28,11 @@ export const customerRouter = new Hono()
     const data = c.req.valid("json");
     const customer = await createCustomerService(data);
     return ApiResponse.created(c, customer);
+  })
+  .post("/bulk-delete", zValidator("json", bulkDeleteSchema), async (c) => {
+    const { ids } = c.req.valid("json");
+    const customer = await bulkDeleteCustomerService(ids);
+    return ApiResponse.success(c, customer);
   })
   .get("/:id", zValidator("param", idParamSchema), async (c) => {
     const { id } = c.req.valid("param");
