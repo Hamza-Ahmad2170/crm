@@ -16,6 +16,7 @@ import { invoiceRouter } from "@/modules/invoices/invoices.routes.js";
 import { ticketRouter } from "@/modules/tickets/tickets.routes.js";
 import { paymentRouter } from "@/modules/payments/payments.routes.js";
 import { areaRouter } from "@/modules/areas/areas.routes.js";
+import { requireAuth } from "./auth/session-middleware.js";
 
 const app = new Hono().basePath("/api/v1");
 
@@ -24,6 +25,7 @@ app.use(cors());
 app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 
 const routes = app
+  .use("*", requireAuth)
   .route("/customers", customerRouter)
   .route("/plans", planRouter)
   .route("/areas", areaRouter)
