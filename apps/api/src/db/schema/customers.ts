@@ -7,8 +7,10 @@ import {
   timestamp,
   pgEnum,
   index,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { CUSTOMER_STATUS } from "@repo/validators/enums";
+import { sql } from "drizzle-orm";
 
 export const customerStatusEnum = pgEnum("customer_status", CUSTOMER_STATUS);
 
@@ -17,8 +19,7 @@ export const customers = pgTable(
   {
     id: uuid("id").defaultRandom().primaryKey(),
     name: varchar("name", { length: 255 }).notNull(),
-    phone: varchar("phone", { length: 20 }).notNull().unique(),
-    cnic: varchar("cnic", { length: 20 }).unique(),
+    phone: varchar("phone", { length: 20 }).notNull(),
     address: varchar("address", { length: 500 }),
     areaId: uuid("area_id").references(() => areas.id),
     planId: uuid("plan_id").references(() => plans.id, {
@@ -33,7 +34,10 @@ export const customers = pgTable(
     deletedAt: timestamp("deleted_at"),
   },
   (table) => [
-    index("customers_name_idx").on(table.name), // phone/cnic don't need this — unique() already indexes them
+    index("customers_name_idx").on(table.name),
+    uniqueIndex("customers_phone_active_idx")
+      .on(table.phone)
+      .where(sql`${table.deletedAt} IS NULL`),
   ],
 );
 

@@ -19,7 +19,7 @@ export const staffRouter = new Hono()
     const { name, email, password, role } = c.req.valid("json");
 
     const result = await auth.api.createUser({
-      body: { name, email, password, data: { role } },
+      body: { name, email, password, role },
     });
 
     return ApiResponse.created(c, result.user);

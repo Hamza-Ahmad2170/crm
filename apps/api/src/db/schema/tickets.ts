@@ -1,4 +1,4 @@
-import { staff } from "./staff.js";
+import { user } from "./user.js"; // was: import { staff } from "./staff.js";
 import {
   pgTable,
   uuid,
@@ -6,6 +6,7 @@ import {
   timestamp,
   pgEnum,
   index,
+  text,
 } from "drizzle-orm/pg-core";
 import { customers } from "./customers.js";
 import { TICKET_STATUS } from "@repo/validators/enums";
@@ -25,7 +26,7 @@ export const tickets = pgTable(
     customerId: uuid("customer_id")
       .notNull()
       .references(() => customers.id, { onDelete: "restrict" }),
-    assignedTo: uuid("assigned_to").references(() => staff.id),
+    assignedTo: text("assigned_to").references(() => user.id), // was: uuid(...).references(() => staff.id)
     subject: varchar("subject", { length: 255 }).notNull(),
     description: varchar("description", { length: 2000 }),
     status: ticketStatusEnum("status").notNull().default("open"),

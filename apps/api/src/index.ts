@@ -10,6 +10,12 @@ import { auth } from "@/auth/auth.js";
 import type { ErrorResponse } from "@/lib/http/error-handler.js";
 import { onError, notFound } from "@/lib/http/error-handler.js";
 import { customerRouter } from "@/modules/customers/customer.routes.js";
+import { planRouter } from "@/modules/plans/plans.routes.js";
+import { staffRouter } from "@/modules/staff/staff.routes.js";
+import { invoiceRouter } from "@/modules/invoices/invoices.routes.js";
+import { ticketRouter } from "@/modules/tickets/tickets.routes.js";
+import { paymentRouter } from "@/modules/payments/payments.routes.js";
+import { areaRouter } from "@/modules/areas/areas.routes.js";
 
 const app = new Hono().basePath("/api/v1");
 
@@ -17,7 +23,14 @@ app.use(logger());
 app.use(cors());
 app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 
-const routes = app.route("/customers", customerRouter);
+const routes = app
+  .route("/customers", customerRouter)
+  .route("/plans", planRouter)
+  .route("/areas", areaRouter)
+  .route("/invoices", invoiceRouter)
+  .route("/payments", paymentRouter)
+  .route("/tickets", ticketRouter)
+  .route("/staff", staffRouter);
 
 app.onError(onError);
 app.notFound(notFound);

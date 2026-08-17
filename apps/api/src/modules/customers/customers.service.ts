@@ -65,7 +65,7 @@ export async function createCustomer(data: CreateCustomerInput) {
   const [existing] = await db
     .select()
     .from(customers)
-    .where(eq(customers.phone, data.phone));
+    .where(and(eq(customers.phone, data.phone), isNull(customers.deletedAt)));
 
   if (existing)
     throw new ConflictError("A customer with this phone number already exists");

@@ -53,11 +53,8 @@ export async function listPlans(query: GetPlansQuery) {
 
 export async function getPlanById(id: string) {
   const plan = await db.query.plans.findFirst({
-    where: {
-      id,
-    },
+    where: { id, deletedAt: { isNull: true } },
   });
-
   if (!plan) throw new NotFoundError("Plan not found");
   return plan;
 }
