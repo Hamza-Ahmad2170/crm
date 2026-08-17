@@ -31,10 +31,6 @@ export const updateCustomerSchema = z
   })
   .partial();
 
-export const getCustomerParamsSchema = idParamSchema;
-export const deleteCustomerParamsSchema = idParamSchema;
-export const bulkDeleteCustomersSchema = bulkIdsSchema;
-
 export const getCustomersQuerySchema = paginationQuerySchema
   .extend(customerSortQuerySchema.shape)
   .extend(searchQuerySchema.shape)
@@ -50,7 +46,10 @@ export const customerSchema = z.object({
   updatedAt: z.string(),
 });
 
+export const getCustomerParamsSchema = idParamSchema;
+export const deleteCustomerParamsSchema = idParamSchema;
+export const bulkDeleteCustomersSchema = bulkIdsSchema;
+export type Customer = z.infer<typeof customerSchema>;
 export type UpdateCustomerInput = z.infer<typeof updateCustomerSchema>;
 export type CreateCustomerInput = z.infer<typeof createCustomerSchema>;
 export type GetCustomersQuery = z.infer<typeof getCustomersQuerySchema>;
-export type Customer = z.infer<typeof customerSchema>;

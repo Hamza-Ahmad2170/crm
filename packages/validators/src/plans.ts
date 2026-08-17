@@ -4,6 +4,7 @@ import {
   searchQuerySchema,
   createSortQuerySchema,
   bulkIdsSchema,
+  idParamSchema,
 } from "./common.js";
 import { PLAN_STATUS } from "./enums.js";
 
@@ -20,8 +21,6 @@ const planBaseFields = {
 };
 
 // --- CREATE ---
-export const createPlanSchema = z.object(planBaseFields);
-export type CreatePlanInput = z.infer<typeof createPlanSchema>;
 
 // --- UPDATE ---
 export const updatePlanSchema = z
@@ -30,7 +29,6 @@ export const updatePlanSchema = z
     status: z.enum(PLAN_STATUS),
   })
   .partial();
-export type UpdatePlanInput = z.infer<typeof updatePlanSchema>;
 
 // --- LIST query ---
 const PLAN_SORT_FIELDS = ["name", "price", "speedMbps", "createdAt"] as const;
@@ -45,7 +43,6 @@ export const getPlansQuerySchema = paginationQuerySchema
   .extend({
     status: z.enum(PLAN_STATUS).optional(),
   });
-export type GetPlansQuery = z.infer<typeof getPlansQuerySchema>;
 
 // --- entity shape ---
 export const planSchema = z.object({
@@ -55,5 +52,12 @@ export const planSchema = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
 });
-export type Plan = z.infer<typeof planSchema>;
+export const createPlanSchema = z.object(planBaseFields);
+
+export const getPlansParamsSchema = idParamSchema;
 export const bulkDeletePlansSchema = bulkIdsSchema;
+
+export type Plan = z.infer<typeof planSchema>;
+export type CreatePlanInput = z.infer<typeof createPlanSchema>;
+export type UpdatePlanInput = z.infer<typeof updatePlanSchema>;
+export type GetPlansQuery = z.infer<typeof getPlansQuerySchema>;

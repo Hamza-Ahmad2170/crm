@@ -1,6 +1,6 @@
 import { eq, and, or, ilike, isNull, sql, asc, desc } from "drizzle-orm";
 import { db } from "@/db/index.js";
-import { customers } from "@/db/schema/customers.js";
+import { customers } from "@/db/schema/index.js";
 import { getPaginationMeta } from "@/lib/pagination.js";
 import { NotFoundError, ConflictError } from "@/lib/http/http-error.js";
 import type {

@@ -7,14 +7,20 @@ export const staffRoleEnum = pgEnum("staff_role", [
   "accountant",
 ]);
 
+export const staffStatusEnum = pgEnum("staff_status", ["active", "disabled"]);
+
 export const staff = pgTable("staff", {
   id: uuid("id").defaultRandom().primaryKey(),
+
   name: varchar("name", { length: 255 }).notNull(),
+
   email: varchar("email", { length: 255 }).notNull().unique(),
+
   role: staffRoleEnum("role").notNull().default("support"),
-  status: pgEnum("staff_status", ["active", "disabled"])("status")
-    .notNull()
-    .default("active"),
+
+  status: staffStatusEnum("status").notNull().default("active"),
+
   createdAt: timestamp("created_at").notNull().defaultNow(),
+
   deletedAt: timestamp("deleted_at"),
 });
