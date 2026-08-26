@@ -7,6 +7,7 @@ import { logger } from "hono/logger";
 import { serve } from "@hono/node-server";
 
 import { auth } from "@/auth/auth.js";
+import { env } from "@/config/env.js";
 import type { ErrorResponse } from "@/lib/http/error-handler.js";
 import { onError, notFound } from "@/lib/http/error-handler.js";
 import { customerRouter } from "@/modules/customers/customer.routes.js";
@@ -17,15 +18,27 @@ import { ticketRouter } from "@/modules/tickets/tickets.routes.js";
 import { paymentRouter } from "@/modules/payments/payments.routes.js";
 import { areaRouter } from "@/modules/areas/areas.routes.js";
 import { requireAuth } from "./auth/session-middleware.js";
+import { startOverdueInvoiceJob } from "./jobs/mark-overdue-invoices.job.js";
 
-const app = new Hono().basePath("/api/v1");
+const app = new Hono();
 
 app.use(logger());
-app.use(cors());
+app.use(
+  "/api/*",
+  cors({
+    origin: env.WEB_ORIGIN,
+    credentials: true,
+    allowHeaders: ["Content-Type", "Authorization"],
+    allowMethods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
+    exposeHeaders: ["Content-Length"],
+    maxAge: 600,
+  }),
+);
 app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 
 const routes = app
-  .use("*", requireAuth)
+  .basePath("/api/v1")
+  // .use("*", requireAuth)
   .route("/customers", customerRouter)
   .route("/plans", planRouter)
   .route("/areas", areaRouter)
@@ -59,5 +72,6 @@ serve(
   },
   (info) => {
     console.log(`API running on http://localhost:${info.port}`);
+    startOverdueInvoiceJob();
   },
 );

@@ -1,7 +1,6 @@
 import { z } from "zod";
 import {
   paginationQuerySchema,
-  searchQuerySchema,
   createSortQuerySchema,
   idParamSchema,
   bulkIdsSchema,

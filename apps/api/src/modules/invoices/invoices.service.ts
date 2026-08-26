@@ -1,4 +1,4 @@
-import { eq, and, sql, asc, desc } from "drizzle-orm";
+import { eq, and, sql, asc, desc, or, lt } from "drizzle-orm";
 import { db, type DbOrTx } from "@/db/index.js";
 import { invoices, payments } from "@/db/schema/index.js";
 import { getPaginationMeta } from "@/lib/pagination.js";
@@ -6,7 +6,6 @@ import { ConflictError, NotFoundError } from "@/lib/http/http-error.js";
 
 import type {
   CreateInvoiceInput,
-  CancelInvoiceInput,
   GetInvoicesQuery,
 } from "@repo/validators/invoices";
 
@@ -100,4 +99,22 @@ export async function recalculateInvoiceStatus(
   else status = "paid";
 
   await tx.update(invoices).set({ status }).where(eq(invoices.id, invoiceId));
+}
+
+export async function markOverdueInvoices() {
+  const result = await db
+    .update(invoices)
+    .set({ status: "overdue" })
+    .where(
+      and(
+        or(
+          eq(invoices.status, "unpaid"),
+          eq(invoices.status, "partially_paid"),
+        ),
+        lt(invoices.dueDate, new Date()),
+      ),
+    )
+    .returning({ id: invoices.id });
+
+  return { markedOverdue: result.length };
 }

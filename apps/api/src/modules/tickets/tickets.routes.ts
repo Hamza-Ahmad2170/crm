@@ -9,6 +9,7 @@ import {
   getTicketParamsSchema,
 } from "@repo/validators/tickets";
 import * as ticketsService from "./tickets.service.js";
+import { ticketCommentRouter } from "./ticket-comments.routes.js";
 
 export const ticketRouter = new Hono()
   .get("/", zValidator("query", getTicketsQuerySchema), async (c) => {

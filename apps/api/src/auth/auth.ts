@@ -1,7 +1,9 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@/db/index.js";
 import { admin } from "better-auth/plugins";
+import { db } from "@/db/index.js";
+import * as schema from "@/db/schema/index.js";
+import { env } from "@/config/env.js";
 import {
   ac,
   admin as adminRole,
@@ -11,7 +13,8 @@ import {
 } from "./permissions.js";
 
 export const auth = betterAuth({
-  database: drizzleAdapter(db, { provider: "pg" }),
+  database: drizzleAdapter(db, { provider: "pg", schema }),
+  trustedOrigins: [env.WEB_ORIGIN],
   emailAndPassword: {
     enabled: true,
     disableSignUp: true,
@@ -32,6 +35,7 @@ export const auth = betterAuth({
     }),
   ],
 });
+
 export type AuthType = {
   user: typeof auth.$Infer.Session.user | null;
   session: typeof auth.$Infer.Session.session | null;

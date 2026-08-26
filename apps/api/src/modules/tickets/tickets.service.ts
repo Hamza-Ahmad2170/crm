@@ -4,7 +4,6 @@ import { tickets } from "@/db/schema/index.js";
 import { getPaginationMeta } from "@/lib/pagination.js";
 import {
   NotFoundError,
-  ConflictError,
   BadRequestError,
 } from "@/lib/http/http-error.js";
 import type {

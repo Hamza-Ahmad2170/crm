@@ -40,3 +40,9 @@ export const STAFF_ROLE = [
   "accountant",
 ] as const;
 export type StaffRole = (typeof STAFF_ROLE)[number];
+
+export const DEVICE_TYPE = ["router", "onu", "switch", "ap"] as const;
+export type DeviceType = (typeof DEVICE_TYPE)[number];
+
+export const DEVICE_STATUS = ["online", "offline", "unknown"] as const;
+export type DeviceStatus = (typeof DEVICE_STATUS)[number];
