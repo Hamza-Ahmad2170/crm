@@ -1,31 +1,41 @@
 {
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "eslint.config.js",
+    "prettier.config.js",
+    "vite.config.js",
+    "src/features/customers/components/customers-table"
+  ],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",
     "module": "ESNext",
     "paths": {
-      "#/*": ["./src/*"],
-      "@/*": ["./src/*"],
-      "@api/*": ["../api/src/*"],
-      "@server/*": ["../api/src/*"],
-      "@/auth/*": ["../api/src/auth/*"],
-      "@/config/*": ["../api/src/config/*"],
-      "@/db/*": ["../api/src/db/*"],
-      "@/jobs/*": ["../api/src/jobs/*"],
-      "@/modules/*": ["../api/src/modules/*"],
-      "@/lib/http/*": ["../api/src/lib/http/*"],
-      "@/lib/pagination.js": ["../api/src/lib/pagination.ts"]
+      "#/*": [
+        "./src/*"
+      ],
+      "@/*": [
+        "./src/*",
+        "../api/src/*"
+      ],
+      "@server/*": [
+        "../api/src/*"
+      ]
     },
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "types": ["vite/client", "node"],
-
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "types": [
+      "vite/client"
+    ],
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": false,
+    "verbatimModuleSyntax": true,
     "noEmit": true,
-
     /* Linting */
     "skipLibCheck": true,
     "strict": true,

@@ -17,7 +17,6 @@ import { invoiceRouter } from "@/modules/invoices/invoices.routes.js";
 import { ticketRouter } from "@/modules/tickets/tickets.routes.js";
 import { paymentRouter } from "@/modules/payments/payments.routes.js";
 import { areaRouter } from "@/modules/areas/areas.routes.js";
-import { requireAuth } from "./auth/session-middleware.js";
 import { startOverdueInvoiceJob } from "./jobs/mark-overdue-invoices.job.js";
 
 const app = new Hono();

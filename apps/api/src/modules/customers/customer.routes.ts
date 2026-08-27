@@ -15,7 +15,11 @@ import {
 
 export const customerRouter = new Hono()
   .get("/", zValidator("query", getCustomersQuerySchema), async (c) => {
+    const q = c.req.query();
+    console.log("q", q);
+
     const query = c.req.valid("query");
+    console.log("query", query);
     const { items, meta } = await customersService.listCustomers(query);
     return ApiResponse.paginated(c, items, meta);
   })

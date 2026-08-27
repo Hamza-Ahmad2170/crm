@@ -2,16 +2,23 @@
   "projectName": "web",
   "mode": "file-router",
   "typescript": true,
-  "tailwind": true,
   "packageManager": "pnpm",
-  "git": false,
-  "install": true,
-  "intent": false,
-  "addOnOptions": {},
+  "includeExamples": false,
+  "tailwind": true,
   "projectPreset": "default",
-  "includeExamples": true,
+  "addOnOptions": {},
+  "git": true,
+  "install": true,
+  "intent": true,
   "routerOnly": false,
   "version": 1,
   "framework": "react",
-  "chosenAddOns": []
+  "chosenAddOns": [
+    "eslint",
+    "nitro",
+    "shadcn",
+    "t3env",
+    "table",
+    "tanstack-query"
+  ]
 }
